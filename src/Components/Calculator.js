@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaPlus, FaMinus, FaAsterisk } from "react-icons/fa";
 import { TbSlash } from "react-icons/tb";
+import './Calculator.css'
 const Calculator = () => {
   // State for input fields
   const [number1, setNumber1] = useState('');
@@ -15,46 +16,11 @@ const Calculator = () => {
 
   // Function to handle arithmetic operations
   const performOperation = (operation) => {
-    // Convert input strings to numbers
-    const num1 = parseFloat(number1);
-    const num2 = parseFloat(number2);
+      const num1 = Number(number1)
+      const num2 = Number(number2)
 
-    // Validate inputs
-    if (isNaN(num2) && isNaN(num1) ) {
-        setErrorMessage(
-            <>
-                        Error !<br/><br/>
-                Please enter valid Num 1 and Num 2
-
-            </>
-        );
-        setResult('');
-        setSuccessMessage('');
-    }
-    else if (isNaN(num1) ) {
-      setErrorMessage(
-        <>
-            Error !<br/><br/>
-            Please enter valid Num 1.
-
-        </>
-      );
-      setResult('');
-      setSuccessMessage('');
-    } else if (isNaN(num2) ) {
-        setErrorMessage(
-        <>
-            Error !<br/><br/>
-            Please enter valid Num 2
-
-        </>
-        );
-        setResult('');
-        setSuccessMessage('');
-    }  else {
-      setErrorMessage('');
-
-      // Perform operation and set result
+    // check validation retirn true or false
+    if(validation()){
       let operationResult;
       switch (operation) {
         case 'add':
@@ -87,33 +53,79 @@ const Calculator = () => {
       else{
         setResult(operationResult);
         setSuccessMessage('Success !');
+        setErrorMessage('')
+      }
+
+    }else{
+      if(number1 === ''){
+        setErrorMessage('Num1 cannot be empty');
+        setSuccessMessage('')
+        setResult('')
+      } 
+      if(number2 === ''){
+        setErrorMessage('Num2 cannot be empty')
+        setSuccessMessage('')
+        setResult('')
+      }
+      if(number1==='' && number2===''){
+        setErrorMessage("numbers can't be empty")
+        setSuccessMessage('')
+        setResult('')
+      }
+      if(isNaN(number1) || isNaN(number2)){
+        setErrorMessage('Please enter valid input')
+        setSuccessMessage('')
+        setResult('')
+
       }
     }
-  };
+  }
+  
+
+// validation function
+function validation(){
+  if(number1 === '' || number2 === '' || isNaN(number1) || isNaN(number2)){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+
+
+
+
+
+
+
 
   return (
-    <div className="calculator b-box">
-         <h1>React Calculator</h1>
-      {/* Input fields */}
-      <input
-        type="text"
-        value={number1}
-        onChange={(e) => setNumber1(e.target.value)}
-        placeholder="Num 1"
-      />
-      <input
-        type="text"
-        value={number2}
-        onChange={(e) => setNumber2(e.target.value)}
-        placeholder="Num 2"
-      />
+    <div className="calculator-container">
+      <div className="operation-box">
+        <h2>React Calculator</h2>
+        {/* Input fields */}
+        <input
+          type="text"
+          value={number1}
+          onChange={(e) => setNumber1(e.target.value)}
+          placeholder="Num 1"
+        />
+        <input
+          type="text"
+          value={number2}
+          onChange={(e) => setNumber2(e.target.value)}
+          placeholder="Num 2"
+        />
 
-      {/* Buttons for arithmetic operations */}
-      <div className="btn">
-        <button className='b' onClick={() => performOperation('add')}><FaPlus /></button>
-        <button className='b' onClick={() => performOperation('subtract')}><FaMinus /></button>
-        <button className='b' onClick={() => performOperation('multiply')}><FaAsterisk /></button>
-        <button className='b' onClick={() => performOperation('divide')}><TbSlash /></button>
+        {/* Buttons for arithmetic operations */}
+        <div className="button-field">
+          <button className='b' onClick={() => performOperation('add')}><FaPlus /></button>
+          <button className='b' onClick={() => performOperation('subtract')}><FaMinus /></button>
+          <button className='b' onClick={() => performOperation('multiply')}><FaAsterisk /></button>
+          <button className='b' onClick={() => performOperation('divide')}><TbSlash /></button>
+
+        </div>
 
       </div>
       
@@ -122,7 +134,7 @@ const Calculator = () => {
 
       {/* Result and success message */}
       {successMessage && <p className="success">{successMessage}</p>}
-      {result && <p className="result">Result: {result}</p>}
+      {result && <p className="result">Result:- <span>{result}</span></p>}
     </div>
   );
 };
